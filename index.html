@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Move Daily</title>
+<style>
+  :root {
+    --bg: #eef3ee;
+    --ink: #14231a;
+    --muted: #4d6355;
+    --accent: #1f7a4d;
+    --card: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1a14;
+      --ink: #e8f2ea;
+      --muted: #9bb3a3;
+      --accent: #4fd18b;
+      --card: #172a1f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  main { max-width: 560px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2rem; margin: 0 0 6px; letter-spacing: -0.5px; }
+  p.sub { margin: 0 0 28px; color: var(--muted); }
+  .timer {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .time { font-size: 4rem; font-variant-numeric: tabular-nums; margin: 0; }
+  .label { color: var(--muted); margin: 0 0 18px; }
+  button {
+    font: inherit;
+    background: var(--accent);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 22px;
+    margin: 0 4px;
+    cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { padding: 12px 0; border-bottom: 1px solid var(--muted); display: flex; justify-content: space-between; }
+  li span:last-child { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Move daily</h1>
+  <p class="sub">A 20-minute routine you can do anywhere.</p>
+
+  <section class="timer" aria-label="Workout timer">
+    <p class="time" id="time">00:00</p>
+    <p class="label" id="label">Ready when you are</p>
+    <button id="start">Start</button>
+    <button id="reset" class="ghost">Reset</button>
+  </section>
+
+  <ul>
+    <li><span>Jumping jacks</span><span>45 sec</span></li>
+    <li><span>Push-ups</span><span>12 reps</span></li>
+    <li><span>Bodyweight squats</span><span>20 reps</span></li>
+    <li><span>Plank</span><span>45 sec</span></li>
+    <li><span>Lunges</span><span>10 per leg</span></li>
+  </ul>
+</main>
+
+<script>
+  let seconds = 0, interval = null;
+  const time = document.getElementById("time");
+  const label = document.getElementById("label");
+  const start = document.getElementById("start");
+
+  function render() {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    time.textContent = m + ":" + s;
+  }
+
+  start.addEventListener("click", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      start.textContent = "Resume";
+      label.textContent = "Paused";
+    } else {
+      interval = setInterval(() => { seconds++; render(); }, 1000);
+      start.textContent = "Pause";
+      label.textContent = "Keep going";
+    }
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    clearInterval(interval);
+    interval = null;
+    seconds = 0;
+    render();
+    start.textContent = "Start";
+    label.textContent = "Ready when you are";
+  });
+</script>
+</body>
+</html>
